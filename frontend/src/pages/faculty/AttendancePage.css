@@ -1,0 +1,250 @@
+
+.attendance-page {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 32px;
+    color: #172b4d;
+}
+
+.attendance-header {
+    margin-bottom: 28px;
+}
+
+.attendance-eyebrow {
+    margin: 0 0 8px;
+    color: #2563eb;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+}
+
+.attendance-header h1 {
+    margin: 0;
+    color: #163b72;
+    font-size: 30px;
+}
+
+.attendance-subtitle {
+    margin: 10px 0 0;
+    color: #64748b;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.attendance-panel {
+    margin-bottom: 26px;
+    padding: 26px;
+    background: #ffffff;
+    border: 1px solid #e2eaf5;
+    border-radius: 14px;
+    box-shadow: 0 4px 20px rgba(31, 65, 114, 0.05);
+}
+
+.attendance-panel-heading {
+    margin-bottom: 22px;
+}
+
+.attendance-panel-heading h2 {
+    margin: 0;
+    color: #163b72;
+    font-size: 21px;
+}
+
+.attendance-panel-heading p {
+    margin: 7px 0 0;
+    color: #64748b;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.attendance-form {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.attendance-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 0;
+}
+
+.attendance-field label {
+    color: #334155;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.attendance-field input,
+.attendance-field select {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    padding: 11px 12px;
+    background: #ffffff;
+    color: #172b4d;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.attendance-field input:focus,
+.attendance-field select:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+}
+
+.attendance-form-actions {
+    display: flex;
+    align-items: flex-end;
+}
+
+.attendance-primary-button,
+.attendance-secondary-button {
+    padding: 11px 17px;
+    border: none;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.attendance-primary-button {
+    background: #2563eb;
+    color: #ffffff;
+}
+
+.attendance-primary-button:hover {
+    background: #1d4ed8;
+}
+
+.attendance-secondary-button {
+    background: #eff6ff;
+    color: #1d4ed8;
+    border: 1px solid #bfdbfe;
+}
+
+.attendance-secondary-button:hover {
+    background: #dbeafe;
+}
+
+.attendance-message {
+    margin-bottom: 18px;
+    padding: 13px 16px;
+    border-radius: 9px;
+    font-size: 14px;
+}
+
+.attendance-success {
+    color: #047857;
+    background: #ecfdf5;
+    border: 1px solid #a7f3d0;
+}
+
+.attendance-error {
+    color: #b91c1c;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+}
+
+.attendance-records-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.attendance-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    border: 1px solid #e2eaf5;
+    border-radius: 10px;
+}
+
+.attendance-table {
+    width: 100%;
+    min-width: 540px;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.attendance-table th {
+    padding: 14px 16px;
+    color: #475569;
+    background: #f1f6fd;
+    border-bottom: 1px solid #dbe5f1;
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.attendance-table td {
+    padding: 15px 16px;
+    color: #475569;
+    border-bottom: 1px solid #edf2f7;
+    font-size: 13px;
+}
+
+.attendance-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.attendance-table tbody tr:hover {
+    background: #f8fbff;
+}
+
+.attendance-student-name {
+    color: #163b72 !important;
+    font-weight: 600;
+}
+
+.attendance-status {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.status-present {
+    color: #047857;
+    background: #d1fae5;
+}
+
+.status-absent {
+    color: #b91c1c;
+    background: #fee2e2;
+}
+
+.attendance-empty {
+    padding: 30px !important;
+    color: #64748b !important;
+    text-align: center;
+}
+
+@media (max-width: 650px) {
+    .attendance-page {
+        padding: 16px;
+    }
+
+    .attendance-header h1 {
+        font-size: 25px;
+    }
+
+    .attendance-panel {
+        padding: 18px;
+    }
+
+    .attendance-form {
+        grid-template-columns: 1fr;
+    }
+
+    .attendance-records-heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}
