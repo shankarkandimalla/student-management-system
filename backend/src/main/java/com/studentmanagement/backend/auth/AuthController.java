@@ -1,5 +1,5 @@
-package com.studentmanagement.backend.auth;
 
+package com.studentmanagement.backend.auth;
 import com.studentmanagement.backend.security.JwtService;
 import com.studentmanagement.backend.user.User;
 import org.springframework.http.HttpStatus;

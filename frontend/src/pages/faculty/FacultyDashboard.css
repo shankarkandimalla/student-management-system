@@ -456,4 +456,66 @@
   .faculty-filter-footer {
     align-items: flex-start;
   }
+  
+.faculty-request-message {
+  margin-bottom: 16px;
+  padding: 12px 14px;
+  border: 1px solid #bfdbfe;
+  border-radius: 8px;
+  background: #eff6ff;
+  color: #1d4ed8;
+  font-size: 13px;
+}
+
+.faculty-request-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.faculty-approve-button,
+.faculty-reject-button {
+  padding: 7px 11px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.faculty-approve-button {
+  border: 1px solid #86efac;
+  background: #f0fdf4;
+  color: #166534;
+}
+
+.faculty-approve-button:hover {
+  background: #dcfce7;
+}
+
+.faculty-reject-button {
+  border: 1px solid #fecaca;
+  background: #fef2f2;
+  color: #b91c1c;
+}
+
+.faculty-reject-button:hover {
+  background: #fee2e2;
+}
+
+.faculty-approve-button:disabled,
+.faculty-reject-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.faculty-pending-status {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 5px;
+  background: #fef3c7;
+  color: #92400e;
+  font-size: 11px;
+  font-weight: 700;
+}
+
 }

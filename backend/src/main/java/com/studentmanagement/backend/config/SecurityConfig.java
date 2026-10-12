@@ -1,3 +1,4 @@
+
 package com.studentmanagement.backend.config;
 
 import com.studentmanagement.backend.security.JwtAuthenticationFilter;
@@ -49,10 +50,40 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(auth -> auth
 
+                        // Authentication and public registration
                         .requestMatchers(
                                 "/api/auth/**"
                         ).permitAll()
 
+                        // Create admin accounts: existing admins only
+                        .requestMatchers(
+                                HttpMethod.POST,
+                                "/api/admin/users"
+                        ).hasRole("ADMIN")
+
+                        // Student approval requests: faculty only
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                "/api/requests/students"
+                        ).hasRole("FACULTY")
+
+                        .requestMatchers(
+                                HttpMethod.PUT,
+                                "/api/requests/students/**"
+                        ).hasRole("FACULTY")
+
+                        // Faculty approval requests: admins only
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                "/api/requests/faculty"
+                        ).hasRole("ADMIN")
+
+                        .requestMatchers(
+                                HttpMethod.PUT,
+                                "/api/requests/faculty/**"
+                        ).hasRole("ADMIN")
+
+                        // Faculty management
                         .requestMatchers(
                                 HttpMethod.POST,
                                 "/api/faculty/**"
@@ -78,6 +109,7 @@ public class SecurityConfig {
                                 "/api/faculty/**"
                         ).hasRole("ADMIN")
 
+                        // Student management
                         .requestMatchers(
                                 HttpMethod.POST,
                                 "/api/students/**"
@@ -106,6 +138,7 @@ public class SecurityConfig {
                                 "FACULTY"
                         )
 
+                        // Attendance
                         .requestMatchers(
                                 HttpMethod.GET,
                                 "/api/attendance/my-attendance"
@@ -129,6 +162,7 @@ public class SecurityConfig {
                                 "FACULTY"
                         )
 
+                        // Marks
                         .requestMatchers(
                                 HttpMethod.GET,
                                 "/api/marks/my-marks"
@@ -152,6 +186,7 @@ public class SecurityConfig {
                                 "FACULTY"
                         )
 
+                        // All other endpoints require authentication
                         .anyRequest().authenticated()
                 )
 
