@@ -1,24 +1,40 @@
 
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
 import authService from "../../services/authService";
 import studentService from "../../services/studentService";
 import "./FacultyDashboard.css";
+
+const API_URL = "http://localhost:8080";
 
 function FacultyDashboard() {
   const navigate = useNavigate();
 
   const [students, setStudents] = useState([]);
+  const [pendingRequests, setPendingRequests] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [requestsLoading, setRequestsLoading] = useState(true);
   const [error, setError] = useState("");
+  const [requestMessage, setRequestMessage] = useState("");
+  const [processingId, setProcessingId] = useState(null);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [departmentFilter, setDepartmentFilter] = useState("");
   const [yearFilter, setYearFilter] = useState("");
   const [sectionFilter, setSectionFilter] = useState("");
-
   const [selectedStudent, setSelectedStudent] = useState(null);
+
+  // Get the JWT stored after login.
+  const getToken = () => {
+  const storedUser = localStorage.getItem("user");
+
+  if (storedUser === null) {
+    return null;
+  }
+
+  const user = JSON.parse(storedUser);
+  return user.token;
+};
 
   const loadStudents = async () => {
     setLoading(true);
@@ -29,17 +45,94 @@ function FacultyDashboard() {
       setStudents(response);
     } catch (error) {
       console.error("Error loading students:", error);
-      setError(
-        "Unable to load students. Please check your connection and try again."
-      );
+      setError("Unable to load students. Please check your connection and try again.");
     } finally {
       setLoading(false);
     }
   };
 
+  const loadPendingRequests = async () => {
+    setRequestsLoading(true);
+    setRequestMessage("");
+
+    try {
+      const token = getToken();
+
+      const response = await fetch(`${API_URL}/api/requests/students`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Unable to load pending requests.");
+      }
+
+      const data = await response.json();
+      setPendingRequests(data);
+    } catch (error) {
+      console.error("Error loading pending requests:", error);
+      setRequestMessage("Unable to load pending student requests.");
+    } finally {
+      setRequestsLoading(false);
+    }
+  };
+
   useEffect(() => {
     loadStudents();
+    loadPendingRequests();
   }, []);
+
+  const handleRequest = async (studentId, action) => {
+    const actionText = action === "approve" ? "approve" : "reject";
+
+    const confirmed = window.confirm(
+      `Are you sure you want to ${actionText} this student registration?`
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    setProcessingId(studentId);
+    setRequestMessage("");
+
+    try {
+      const token = getToken();
+
+      const response = await fetch(
+        `${API_URL}/api/requests/students/${studentId}/${action}`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        const message = await response.text();
+        throw new Error(message || `Failed to ${actionText} registration.`);
+      }
+
+      setRequestMessage(
+        `Student registration ${action === "approve" ? "approved" : "rejected"} successfully.`
+      );
+
+      await loadPendingRequests();
+      await loadStudents();
+    } catch (error) {
+      console.error(`Error trying to ${actionText} student:`, error);
+      setRequestMessage(
+        error.message || `Unable to ${actionText} this registration.`
+      );
+    } finally {
+      setProcessingId(null);
+    }
+  };
 
   const handleLogout = () => {
     authService.logout();
@@ -149,6 +242,92 @@ function FacultyDashboard() {
           </button>
         </section>
 
+        {/* Pending student registration requests */}
+        <section className="faculty-card">
+          <div className="faculty-section-heading">
+            <div>
+              <h2>Pending Student Requests</h2>
+              <p>Review student registrations and approve or reject them.</p>
+            </div>
+
+            <button
+              className="faculty-secondary-button"
+              onClick={loadPendingRequests}
+              disabled={requestsLoading}
+            >
+              {requestsLoading ? "Refreshing..." : "Refresh Requests"}
+            </button>
+          </div>
+
+          {requestMessage && (
+            <div className="faculty-request-message" role="status">
+              {requestMessage}
+            </div>
+          )}
+
+          {requestsLoading ? (
+            <div className="faculty-message">
+              Loading pending requests...
+            </div>
+          ) : pendingRequests.length === 0 ? (
+            <div className="faculty-message">
+              No pending student registration requests.
+            </div>
+          ) : (
+            <div className="faculty-table-wrapper">
+              <table className="faculty-table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Email</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {pendingRequests.map((request) => (
+                    <tr key={request.id}>
+                      <td>{request.id}</td>
+                      <td>{request.email}</td>
+                      <td>
+                        <span className="faculty-pending-status">
+                          PENDING
+                        </span>
+                      </td>
+                      <td>
+                        <div className="faculty-request-actions">
+                          <button
+                            className="faculty-approve-button"
+                            onClick={() =>
+                              handleRequest(request.id, "approve")
+                            }
+                            disabled={processingId !== null}
+                          >
+                            {processingId === request.id
+                              ? "Processing..."
+                              : "Approve"}
+                          </button>
+
+                          <button
+                            className="faculty-reject-button"
+                            onClick={() =>
+                              handleRequest(request.id, "reject")
+                            }
+                            disabled={processingId !== null}
+                          >
+                            Reject
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </section>
+
         <section className="faculty-stat-card">
           <div className="faculty-stat-icon">S</div>
           <div>
@@ -191,9 +370,7 @@ function FacultyDashboard() {
               <select
                 id="departmentFilter"
                 value={departmentFilter}
-                onChange={(event) =>
-                  setDepartmentFilter(event.target.value)
-                }
+                onChange={(event) => setDepartmentFilter(event.target.value)}
               >
                 <option value="">All Departments</option>
                 {departments.map((department) => (
@@ -242,7 +419,10 @@ function FacultyDashboard() {
               <strong>{students.length}</strong> students
             </p>
 
-            <button className="faculty-clear-button" onClick={clearFilters}>
+            <button
+              className="faculty-clear-button"
+              onClick={clearFilters}
+            >
               Clear Filters
             </button>
           </div>

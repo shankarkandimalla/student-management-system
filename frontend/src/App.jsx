@@ -1,4 +1,4 @@
-
+import Register from "./pages/Register";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -15,7 +15,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Login />} />
-
+        <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
 
         <Route

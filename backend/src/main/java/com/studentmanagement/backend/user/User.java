@@ -1,5 +1,5 @@
 package com.studentmanagement.backend.user;
-
+import com.studentmanagement.backend.enums.AccountStatus;
 import com.studentmanagement.backend.enums.Role;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -27,6 +27,10 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
+
+    @Enumerated(EnumType.STRING)
+@Column(nullable = false)
+private AccountStatus status = AccountStatus.PENDING;
 
     public User() {
     }
@@ -69,4 +73,11 @@ public class User {
     public void setRole(Role role) {
         this.role = role;
     }
+    public AccountStatus getStatus() {
+    return status;
+}
+
+public void setStatus(AccountStatus status) {
+    this.status = status;
+}
 }

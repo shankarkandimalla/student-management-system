@@ -62,24 +62,28 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         .findByEmail(email)
                         .orElse(null);
 
-                if (user != null) {
+                
+if (user != null
+        && user.getStatus() ==
+        com.studentmanagement.backend.enums.AccountStatus.APPROVED) {
 
-                    SimpleGrantedAuthority authority =
-                            new SimpleGrantedAuthority(
-                                    "ROLE_" + user.getRole().name()
-                            );
+    SimpleGrantedAuthority authority =
+            new SimpleGrantedAuthority(
+                    "ROLE_" + user.getRole().name()
+            );
 
-                    UsernamePasswordAuthenticationToken authentication =
-                            new UsernamePasswordAuthenticationToken(
-                                    user.getEmail(),
-                                    null,
-                                    Collections.singletonList(authority)
-                            );
+    UsernamePasswordAuthenticationToken authentication =
+            new UsernamePasswordAuthenticationToken(
+                    user.getEmail(),
+                    null,
+                    Collections.singletonList(authority)
+            );
 
-                    SecurityContextHolder
-                            .getContext()
-                            .setAuthentication(authentication);
-                }
+    SecurityContextHolder
+            .getContext()
+            .setAuthentication(authentication);
+}
+
             }
 
        } catch (Exception exception) {

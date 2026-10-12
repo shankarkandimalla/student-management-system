@@ -1,15 +1,25 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import authService from "../services/authService";
+
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 function Login() {
     const navigate = useNavigate();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+    const location = useLocation();
 
-  const [message, setMessage] = useState("");
-  const [error, setError] = useState("");
+    const [email, setEmail] = useState(
+        location.state?.email || ""
+    );
 
+    const [password, setPassword] = useState("");
+
+    const [message, setMessage] = useState(
+        location.state?.registrationSuccess
+            ? "Registration successful! Please log in."
+            : ""
+    );
+
+    const [error, setError] = useState("");
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -91,6 +101,9 @@ if (response.role === "STUDENT") {
           Login
         </button>
       </form>
+      <p>
+  Don't have an account? <Link to="/register">Register</Link>
+</p>
 
       <br />
 
@@ -101,6 +114,7 @@ if (response.role === "STUDENT") {
       {error && (
         <p>{error}</p>
       )}
+      
     </div>
   );
 }
